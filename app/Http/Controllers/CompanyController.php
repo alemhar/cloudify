@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Custom\Enum\AccountType;
 
 class CompanyController extends Controller
 {
@@ -12,8 +13,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = \App\Models\Company::all();
-        return Inertia::render('Companies/Index', ['companies' => $companies]);
+        // $companies = \App\Models\Company::all();
+        return Inertia::render('Companies/Index');
     }
 
     /**
@@ -29,7 +30,25 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $user = $request->user();
+        $user->company()->create([
+            'name' => $request->name,
+            'address1' => $request->address1 ?? '',
+            'address2' => $request->address2 ?? '',
+            'city' => $request->city ?? '',
+            'contact_name' => $request->contact_name ?? '',
+            'contact_phone' => $request->contact_phone ?? '',
+            'contact_email' => $request->contact_email ?? '',
+            'contact_position' => $request->contact_position ?? '',
+            'account_type' => AccountType::FREE->value,
+            'subscribe' => false,
+            'country' => $request->country ?? '',
+            'website' => $request->website ?? '',
+            'logo' => $request->logo ?? '',
+        ]);
+
+        return redirect()->route('companies');
     }
 
     /**

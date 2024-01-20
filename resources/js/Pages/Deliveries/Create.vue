@@ -1,5 +1,8 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import Modal from "@/Components/Modal.vue";
+import CompanyList from "@/Components/CompanyList.vue";
+
 import { Head } from "@inertiajs/vue3";
 import { Inertia } from "@inertiajs/inertia";
 import { reactive, ref, onMounted } from "vue";
@@ -9,18 +12,24 @@ import TeamMatchesTable from "@/Components/TeamMatchesTable.vue";
 import Players from "@/Components/Players.vue";
 
 const props = defineProps({
-    ballClub: Object,
-    rounds: Array,
     flash: Object,
-    round_matches: Array,
     access_token: String,
+});
+
+const showCompanyModal = ref(false);
+
+const selectedCompany = reactive({
+    id: null,
+    name: null,
 });
 
 const currentRound = ref(null);
 
 const message = ref(props.flash.message);
 
-const activeTab = ref("Teams");
+const selectCompany = () => {
+    showCompanyModal.value = true;
+};
 
 const notify = (message) => {
     toast(message, {
@@ -59,6 +68,11 @@ onMounted(() => {
     }
 });
 
+const handleSelectCompany = (company) => {
+    selectedCompany.id = company.id;
+    selectedCompany.name = company.name;
+    showCompanyModal.value = false;
+};
 const appName = import.meta.env.VITE_APP_NAME;
 </script>
 
@@ -116,10 +130,13 @@ const appName = import.meta.env.VITE_APP_NAME;
                             <input
                                 type="text"
                                 id="company-name"
+                                v-model="selectedCompany.name"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 pr-8 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                autocomplete="off"
                             />
                             <i
-                                class="pi pi-search absolute pr-2 text-gray-400"
+                                @click="selectCompany"
+                                class="pi pi-list absolute pr-2 text-gray-400"
                                 style="font-size: 1.2rem"
                             ></i>
                         </div>
@@ -139,5 +156,27 @@ const appName = import.meta.env.VITE_APP_NAME;
                 </form>
             </div>
         </div>
+
+        <Modal :show="showCompanyModal" @close="showCompanyModal = false">
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg p-10">
+                <div class="flex justify-between">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Select Company
+                    </h3>
+                    <div class="ml-4">
+                        <button
+                            @click="showCompanyModal = false"
+                            class="bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-2 px-4 rounded inline-flex items-center"
+                        >
+                            <i class="pi pi-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <CompanyList
+                :selectMode="true"
+                @companySelected="handleSelectCompany"
+            ></CompanyList>
+        </Modal>
     </AuthenticatedLayout>
 </template>

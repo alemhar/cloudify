@@ -10,7 +10,21 @@ class Company extends Model
 {
     use HasFactory;
 
-    protected $fillable = [ 'name', 'account_type' ];
+    protected $fillable = [ 
+        'name',
+        'account_type',
+        'address1',
+        'address2',
+        'city',
+        'contact_name',
+        'contact_phone',
+        'contact_email',
+        'contact_position',
+        'country',
+        'website',
+        'logo',
+        'subscribe'
+    ];
 
     protected static function boot()
     {

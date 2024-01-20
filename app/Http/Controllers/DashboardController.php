@@ -14,8 +14,11 @@ class DashboardController extends Controller
     {
         
         $user = $request->user();
+        $user->tokens()->delete();
+        $appToken = $user->createToken($user->name);
+        $appTokenText = $appToken->plainTextToken;
         
-        return Inertia::render('Dashboard', ['user' => $user]);
+        return Inertia::render('Dashboard', ['user' => $user, 'access_token' => $appTokenText]);
 
 
         // $ballClub = auth()->user()->ballClub->load(['teams' => function ($query) {

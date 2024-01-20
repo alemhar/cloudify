@@ -37,6 +37,7 @@ Route::get('/dashboard', DashboardController::class)->middleware(['auth', 'verif
 Route::get('/new', [DeliveryController::class, 'create'])->middleware(['auth', 'verified'])->name('new');
 
 Route::get('/companies', [CompanyController::class, 'index'])->middleware(['auth', 'verified'])->name('companies');
+Route::post('/companies', [CompanyController::class, 'store'])->middleware(['auth', 'verified'])->name('companies');
 
 Route::get('/ball-club/{alias}', BallClubController::class)->where('alias', '[a-z-]+')->name('ball-club');
 
