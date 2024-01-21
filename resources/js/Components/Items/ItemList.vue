@@ -14,27 +14,27 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(["companySelected"]);
+const emit = defineEmits(["itemSelected"]);
 
-const companyInitial = {
+const itemInitial = {
     name: "",
-    address1: "",
-    address2: "",
-    city: "",
-    contact_name: "",
-    contact_phone: "",
+    description: "",
+    model: "",
+    sku: "",
+    thumbnail: "",
+    price: "",
 };
 
-const companies = reactive([]);
-const company = reactive(companyInitial);
+const items = reactive([]);
+const item = reactive(itemInitial);
 
-const getCompany = async () => {
-    const response = await axios.get(`/api/companies`, {
+const getItems = async () => {
+    const response = await axios.get(`/api/items`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
     });
-    Object.assign(companies, response.data);
+    Object.assign(items, response.data);
 };
 
 const currentRound = ref(null);
@@ -42,19 +42,17 @@ const currentRound = ref(null);
 const showModal = ref(false);
 
 const saveCompany = () => {
-    if (!company.name) {
+    if (!item.name) {
         notify("Please enter company name!", "error");
         return;
     }
 
-    Inertia.post("/companies", company);
-    company = companyInitial;
+    Inertia.post("/items", item);
+    item = itemInitial;
     showModal.value = false;
 };
 
 // const message = ref(props.flash.message);
-
-const activeTab = ref("Teams");
 
 const notify = (message, type = "success") => {
     toast(message, {
@@ -68,22 +66,6 @@ const notify = (message, type = "success") => {
     });
 };
 
-const setRoundId = (roundId) => {
-    if (roundId === null) {
-        return;
-    } else if (roundId === currentRound.value) {
-        return;
-    }
-
-    currentRound.value = parseInt(roundId);
-};
-
-const updateTeam = (newRank, teamId, field) => {
-    let data = {};
-    data[field] = newRank;
-    Inertia.put(`/teams/${teamId}`, data);
-};
-
 onMounted(async () => {
     // console.log(props.selectMode);
     // if (props.access_token) {
@@ -92,18 +74,14 @@ onMounted(async () => {
     if (props.flash && props.flash.message) {
         notify(props.flash.message);
     }
-    await getCompany();
+    await getItems();
 });
 
-const testButton = (value = "test") => {
-    console.log("test button: " + value);
-};
-
-const selectCompany = (company) => {
+const selectItem = (item) => {
     if (props.selectMode) {
-        emit("companySelected", company);
+        emit("itemSelected", item);
     } else {
-        Inertia.visit(`/companies/${company.id}`);
+        Inertia.visit(`/items/${item.id}`);
     }
 };
 
@@ -116,15 +94,10 @@ const appName = import.meta.env.VITE_APP_NAME;
             <div class="flex">
                 <form class="w-full">
                     <div class="mb-4">
-                        <!-- <label
-                            for="company-name"
-                            class="block text-gray-700 text-sm font-bold mb-2"
-                            >Company Name:</label
-                        > -->
                         <div class="relative flex items-center justify-end">
                             <input
                                 type="text"
-                                id="company-name"
+                                id="item-name"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 pr-8 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             />
                             <i
@@ -154,23 +127,20 @@ const appName = import.meta.env.VITE_APP_NAME;
                         </td>
                         <td class="px-4 py-2">
                             <button @click="showModal = true">
-                                <div class="text-blue-500">
-                                    Create new company
-                                </div>
+                                <div class="text-blue-500">Add new item</div>
                             </button>
                         </td>
                     </tr>
                     <tr class="">
                         <br />
                     </tr>
-                    <tr v-for="company in companies" :key="company.id" class="">
-                        <td class="px-4 py-2">{{ company.id }}</td>
+                    <tr v-for="item in items" :key="item.id" class="">
+                        <td class="px-4 py-2">{{ item.id }}</td>
 
-                        <td class="px-4 py-2" @click="selectCompany(company)">
-                            <div>{{ company.name }}</div>
+                        <td class="px-4 py-2" @click="selectItem(item)">
+                            <div>{{ item.name }}</div>
                             <div class="text-sm text-gray-500 italic">
-                                {{ company.address1 }} {{ company.address2
-                                }}<br />{{ company.city }}
+                                {{ item.description }}
                             </div>
                         </td>
                         <!-- <td class="px-4 py-2 flex justify-center items-center">
@@ -189,7 +159,7 @@ const appName = import.meta.env.VITE_APP_NAME;
                 <div class="bg-white shadow overflow-hidden sm:rounded-lg p-10">
                     <div class="flex justify-between">
                         <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Create new company
+                            Add new item
                         </h3>
                         <div class="ml-4">
                             <button
@@ -212,12 +182,12 @@ const appName = import.meta.env.VITE_APP_NAME;
                                 <label
                                     for="company-name"
                                     class="block text-gray-700 text-sm font-bold mb-2"
-                                    >Company Name:</label
+                                    >Item Name:</label
                                 >
                                 <input
                                     type="text"
                                     id="company-name"
-                                    v-model="company.name"
+                                    v-model="item.name"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 />
                             </div>
@@ -225,30 +195,11 @@ const appName = import.meta.env.VITE_APP_NAME;
                                 <label
                                     for="address"
                                     class="block text-gray-700 text-sm font-bold mb-2"
-                                    >Address:</label
+                                    >Description:</label
                                 >
                                 <input
                                     type="text"
-                                    v-model="company.address1"
-                                    id="address"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
-                                <input
-                                    type="text"
-                                    v-model="company.address2"
-                                    id="address"
-                                    class="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
-                            </div>
-                            <div class="mb-4">
-                                <label
-                                    for="address"
-                                    class="block text-gray-700 text-sm font-bold mb-2"
-                                    >City:</label
-                                >
-                                <input
-                                    type="text"
-                                    v-model="company.city"
+                                    v-model="item.description"
                                     id="address"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 />
@@ -257,24 +208,11 @@ const appName = import.meta.env.VITE_APP_NAME;
                                 <label
                                     for="address"
                                     class="block text-gray-700 text-sm font-bold mb-2"
-                                    >Contact Person:</label
+                                    >Model #:</label
                                 >
                                 <input
                                     type="text"
-                                    v-model="company.contact_name"
-                                    id="address"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                />
-                            </div>
-                            <div class="mb-4">
-                                <label
-                                    for="address"
-                                    class="block text-gray-700 text-sm font-bold mb-2"
-                                    >Contact Number:</label
-                                >
-                                <input
-                                    type="text"
-                                    v-model="company.contact_phone"
+                                    v-model="item.model"
                                     id="address"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 />
@@ -289,7 +227,7 @@ const appName = import.meta.env.VITE_APP_NAME;
                                 <span>Cancel</span>
                             </button>
                             <button
-                                @click="saveCompany"
+                                @click="saveItem"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                             >
                                 <i class="pi pi-check"></i>

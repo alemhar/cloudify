@@ -4,12 +4,13 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BallClubController;
-use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IndexPageController;
 use App\Http\Controllers\RoundMatchController;
 use App\Http\Controllers\Web\PlayerOfTheGameController;
@@ -38,6 +39,9 @@ Route::get('/new', [DeliveryController::class, 'create'])->middleware(['auth', '
 
 Route::get('/companies', [CompanyController::class, 'index'])->middleware(['auth', 'verified'])->name('companies');
 Route::post('/companies', [CompanyController::class, 'store'])->middleware(['auth', 'verified'])->name('companies');
+
+Route::get('items', [ItemController::class, 'index'])->middleware(['auth', 'verified'])->name('items');
+
 
 Route::get('/ball-club/{alias}', BallClubController::class)->where('alias', '[a-z-]+')->name('ball-club');
 

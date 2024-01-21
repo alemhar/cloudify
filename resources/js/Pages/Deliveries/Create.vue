@@ -17,6 +17,7 @@ const props = defineProps({
 });
 
 const showCompanyModal = ref(false);
+const showItemModal = ref(false);
 
 const selectedCompany = reactive({
     id: null,
@@ -106,20 +107,8 @@ const appName = import.meta.env.VITE_APP_NAME;
         focus:outline focus:outline-2 focus:outline-red-500
         -->
         <div class="m-6 p-6 border-2 bg-white rounded-lg">
-            <div class="flex">
+            <div class="">
                 <form class="w-full">
-                    <!-- <div class="mb-4">
-                        <label
-                            for="customer-number"
-                            class="block text-gray-700 text-sm font-bold mb-2"
-                            >Customer #:</label
-                        >
-                        <input
-                            type="text"
-                            id="customer-number"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        />
-                    </div> -->
                     <div class="mb-4">
                         <label
                             for="company-name"
@@ -154,6 +143,53 @@ const appName = import.meta.env.VITE_APP_NAME;
                         />
                     </div> -->
                 </form>
+
+                <table
+                    class="table-auto w-full"
+                    style="height: 400px; overflow-y: scroll"
+                >
+                    <tbody
+                        class=""
+                        style="display: block; height: 60vh; overflow: auto"
+                    >
+                        <tr class="">
+                            <td class="px-4 py-2 flex justify-end">
+                                <button @click="showItemModal = true">
+                                    <i
+                                        class="pi pi-plus text-blue-500 text-sm pt-1"
+                                    ></i>
+                                </button>
+                            </td>
+                            <td class="px-4 py-2">
+                                <button @click="showItemModal = true">
+                                    <div class="text-blue-500">Add item.</div>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <br />
+                        </tr>
+                        <!-- <tr v-for="company in companies" :key="company.id" class="">
+                        <td class="px-4 py-2">{{ company.id }}</td>
+
+                        <td class="px-4 py-2" @click="selectCompany(company)">
+                            <div>{{ company.name }}</div>
+                            <div class="text-sm text-gray-500 italic">
+                                {{ company.address1 }} {{ company.address2
+                                }}<br />{{ company.city }}
+                            </div>
+                        </td> -->
+                        <!-- <td class="px-4 py-2 flex justify-center items-center">
+                            <button
+                                @click="testButton('view')"
+                                class="bg-gray-300 hover:bg-gray-500 font-bold py-2 px-4 rounded inline-flex items-center mr-3"
+                            >
+                                <i class="pi pi-pencil"></i>
+                            </button>
+                        </td> -->
+                        <!-- </tr> -->
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -177,6 +213,28 @@ const appName = import.meta.env.VITE_APP_NAME;
                 :selectMode="true"
                 @companySelected="handleSelectCompany"
             ></CompanyList>
+        </Modal>
+
+        <Modal :show="showItemModal" @close="showItemModal = false">
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg p-10">
+                <div class="flex justify-between">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Select Item
+                    </h3>
+                    <div class="ml-4">
+                        <button
+                            @click="showItemModal = false"
+                            class="bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-2 px-4 rounded inline-flex items-center"
+                        >
+                            <i class="pi pi-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- <CompanyList
+                :selectMode="true"
+                @companySelected="handleSelectCompany"
+            ></CompanyList> -->
         </Modal>
     </AuthenticatedLayout>
 </template>
