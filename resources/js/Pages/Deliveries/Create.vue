@@ -80,7 +80,7 @@ const grandTotal = computed(() => {
 });
 
 const totalItems = computed(() => {
-    return items.reduce((acc, item) => acc + item.order, 0);
+    return items.reduce((acc, item) => acc + Number(item.order), 0);
 });
 
 
@@ -156,11 +156,11 @@ const appName = import.meta.env.VITE_APP_NAME;
 
                 <table
                     class="table-auto w-full"
-                    style="height: 400px; overflow-y: scroll"
+                    style="height: 300px; overflow-y: scroll"
                 >
                     <tbody
                         class=""
-                        style="display: block; height: 60vh; overflow: auto"
+                        style="display: block; overflow: auto"
                     >
                         <tr class="">
                             <td class="px-4 py-2 flex justify-end">
