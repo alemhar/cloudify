@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\RoundController;
 use App\Http\Controllers\PlayerController;
+use App\Http\Controllers\Api\ItemController;
 use App\Http\Controllers\RoundMatchController;
 use App\Http\Controllers\TeamPlayerController;
 use App\Http\Controllers\Api\CompanyController;
@@ -29,6 +30,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/companies', [CompanyController::class, 'index']);
+    Route::get('/items', [ItemController::class, 'index']);
+
     Route::put('round/{id}/current', [RoundController::class, 'setCurrent']);
     Route::put('/round-match-team', [RoundMatchTeamController::class, 'update']);
     Route::put('round/{id}', [RoundController::class, 'update']);

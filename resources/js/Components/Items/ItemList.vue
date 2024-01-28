@@ -37,18 +37,17 @@ const getItems = async () => {
     Object.assign(items, response.data);
 };
 
-const currentRound = ref(null);
 
 const showModal = ref(false);
 
-const saveCompany = () => {
+const saveItem = () => {
     if (!item.name) {
-        notify("Please enter company name!", "error");
+        notify("Please enter item name!", "error");
         return;
     }
 
     Inertia.post("/items", item);
-    item = itemInitial;
+    Object.assign(item, itemInitial);
     showModal.value = false;
 };
 
@@ -85,12 +84,16 @@ const selectItem = (item) => {
     }
 };
 
+const formatNumber = (number) => {
+    return parseFloat(number).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 const appName = import.meta.env.VITE_APP_NAME;
 </script>
 
 <template>
-    <div>
-        <div class="m-6 p-6 border-2 bg-white rounded-lg">
+    <div >
+        <div class="p-2 border-2 bg-white rounded-lg">
             <div class="flex">
                 <form class="w-full">
                     <div class="mb-4">
@@ -143,14 +146,10 @@ const appName = import.meta.env.VITE_APP_NAME;
                                 {{ item.description }}
                             </div>
                         </td>
-                        <!-- <td class="px-4 py-2 flex justify-center items-center">
-                            <button
-                                @click="testButton('view')"
-                                class="bg-gray-300 hover:bg-gray-500 font-bold py-2 px-4 rounded inline-flex items-center mr-3"
-                            >
-                                <i class="pi pi-pencil"></i>
-                            </button>
-                        </td> -->
+                        <td class="px-4 py-2" @click="selectItem(item)">
+                            <div> <b>₱</b>{{ formatNumber(item.price) }}</div>
+                            
+                        </td>                        
                     </tr>
                 </tbody>
             </table>
@@ -170,12 +169,7 @@ const appName = import.meta.env.VITE_APP_NAME;
                             </button>
                         </div>
                     </div>
-                    <!-- <div class="mt-2">
-                        <p class="text-sm text-gray-500">
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Temporibus, quibusdam accusamus.
-                        </p>
-                    </div> -->
+
                     <div class="mt-4">
                         <form>
                             <div class="mb-4">
@@ -217,6 +211,21 @@ const appName = import.meta.env.VITE_APP_NAME;
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 />
                             </div>
+
+                            <div class="mb-4">
+                                <label
+                                    for="address"
+                                    class="block text-gray-700 text-sm font-bold mb-2"
+                                    >Price :</label
+                                >
+                                <input
+                                    type="text"
+                                    v-model="item.price"
+                                    id="address"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
+
                         </form>
                         <div class="flex justify-between mt-4">
                             <button

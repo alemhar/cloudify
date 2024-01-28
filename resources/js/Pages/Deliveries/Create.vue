@@ -2,14 +2,13 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Modal from "@/Components/Modal.vue";
 import CompanyList from "@/Components/CompanyList.vue";
-
+import ItemList from "@/Components/Items/ItemList.vue";
 import { Head } from "@inertiajs/vue3";
 import { Inertia } from "@inertiajs/inertia";
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, onMounted, computed } from "vue";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import TeamMatchesTable from "@/Components/TeamMatchesTable.vue";
-import Players from "@/Components/Players.vue";
+
 
 const props = defineProps({
     flash: Object,
@@ -24,7 +23,7 @@ const selectedCompany = reactive({
     name: null,
 });
 
-const currentRound = ref(null);
+const items = reactive([]);
 
 const message = ref(props.flash.message);
 
@@ -44,15 +43,6 @@ const notify = (message) => {
     });
 };
 
-const setRoundId = (roundId) => {
-    if (roundId === null) {
-        return;
-    } else if (roundId === currentRound.value) {
-        return;
-    }
-
-    currentRound.value = parseInt(roundId);
-};
 
 const updateTeam = (newRank, teamId, field) => {
     let data = {};
@@ -74,6 +64,26 @@ const handleSelectCompany = (company) => {
     selectedCompany.name = company.name;
     showCompanyModal.value = false;
 };
+
+const handleSelectItem = (item) => {
+    items.push({...item, order: 1.00});
+    console.log(items);
+    showItemModal.value = false;
+};
+
+const formatNumber = (number) => {
+    return parseFloat(number).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+const grandTotal = computed(() => {
+    return items.reduce((acc, item) => acc + (item.price * item.order), 0);
+});
+
+const totalItems = computed(() => {
+    return items.reduce((acc, item) => acc + item.order, 0);
+});
+
+
 const appName = import.meta.env.VITE_APP_NAME;
 </script>
 
@@ -169,16 +179,42 @@ const appName = import.meta.env.VITE_APP_NAME;
                         <tr class="">
                             <br />
                         </tr>
-                        <!-- <tr v-for="company in companies" :key="company.id" class="">
-                        <td class="px-4 py-2">{{ company.id }}</td>
+                        <tr v-for="item in items" :key="item.id" class="">
+                        <td class="px-4 py-2"  style="width: 20%;">{{ item.id }}</td>
 
-                        <td class="px-4 py-2" @click="selectCompany(company)">
-                            <div>{{ company.name }}</div>
-                            <div class="text-sm text-gray-500 italic">
-                                {{ company.address1 }} {{ company.address2
-                                }}<br />{{ company.city }}
-                            </div>
-                        </td> -->
+                        <td class="px-4 py-2" style="width: 50%;">
+                            <div>{{ item.name }}</div>
+                            
+                            <!-- <span> -->
+                               <div class="  items-center justify-end">
+                                    <!-- <div class="flex items-center justify-end"> -->
+                                           
+                                        <div class="text-gray-400"
+                                        >Price: {{ formatNumber(item.price) }}
+                                        </div>
+                                        <div class="text-gray-400"
+                                
+                            >Total: {{ formatNumber(item.price * item.order)}}
+                        </div>
+                                        
+                                    </div>  
+                                   
+                               <!-- </div> -->
+                            <!-- </span> -->
+                        </td>
+
+                        <td class="px-4 py-2"  style="width: 30%;">
+                            <div>
+                                            <input
+                                            type="text"
+                                            v-model="item.order"
+                                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-right"
+                                            @focus="event => event.target.select()"
+                                            />
+                                        </div>
+                        </td>
+
+                      
                         <!-- <td class="px-4 py-2 flex justify-center items-center">
                             <button
                                 @click="testButton('view')"
@@ -187,9 +223,40 @@ const appName = import.meta.env.VITE_APP_NAME;
                                 <i class="pi pi-pencil"></i>
                             </button>
                         </td> -->
-                        <!-- </tr> -->
+                        </tr>
                     </tbody>
                 </table>
+                <div class="mt-4">
+                    <div>Grand Total: {{ formatNumber(grandTotal) }}</div> <div>Quatity: {{ formatNumber(totalItems) }}</div>
+                </div>
+                <div class="mt-4">
+                    <label
+                        for="notes"
+                        class="block text-gray-700 text-sm font-bold mb-2"
+                    >
+                        Notes:
+                    </label>
+                    <textarea
+                        id="notes"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    ></textarea>
+                </div>
+                <div class="flex justify-between mt-4">
+                    <button
+                        @click="showModal = false"
+                        class="bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-2 px-4 rounded inline-flex items-center"
+                    >
+                        <i class="pi pi-times"></i>
+                        <span>Cancel</span>
+                    </button>
+                    <button
+                        @click="saveItem"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                        <i class="pi pi-check"></i>
+                        <span>Save</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -231,10 +298,10 @@ const appName = import.meta.env.VITE_APP_NAME;
                     </div>
                 </div>
             </div>
-            <!-- <CompanyList
+            <ItemList
                 :selectMode="true"
-                @companySelected="handleSelectCompany"
-            ></CompanyList> -->
+                @itemSelected="handleSelectItem"
+            ></ItemList>
         </Modal>
     </AuthenticatedLayout>
 </template>

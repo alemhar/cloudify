@@ -41,7 +41,8 @@ Route::get('/companies', [CompanyController::class, 'index'])->middleware(['auth
 Route::post('/companies', [CompanyController::class, 'store'])->middleware(['auth', 'verified'])->name('companies');
 
 Route::get('items', [ItemController::class, 'index'])->middleware(['auth', 'verified'])->name('items');
-
+Route::post('items', [ItemController::class, 'store'])->middleware(['auth', 'verified'])->name('items');
+Route::get('/items/{id}', [ItemController::class, 'show'])->middleware(['auth', 'verified'])->name('item');
 
 Route::get('/ball-club/{alias}', BallClubController::class)->where('alias', '[a-z-]+')->name('ball-club');
 

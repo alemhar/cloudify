@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -34,5 +35,21 @@ class Company extends Model
             $model->uuid = (string) Str::uuid();
         });
     }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(Item::class);
+    }
+    
+    // public function getRouteKeyName()
+    // {
+    //     return 'uuid';
+    // }
+
 
 }

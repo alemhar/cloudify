@@ -48,7 +48,7 @@ const saveCompany = () => {
     }
 
     Inertia.post("/companies", company);
-    company = companyInitial;
+    Object.assign(company, companyInitial);
     showModal.value = false;
 };
 

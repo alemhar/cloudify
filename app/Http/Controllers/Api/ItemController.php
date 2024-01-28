@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\Item;
-use Inertia\Inertia;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -13,7 +12,9 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Items/Index');
+        $items = auth()->user()->company->items;
+
+        return response()->json($items);
     }
 
     /**
@@ -29,22 +30,15 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        $user = $request->user();
-        $user->company->items()->create($request->all());
-
-        return redirect()->route('items')->with('success', 'Item created.');
+        //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(string $id)
     {
-        $item = Item::findOrFail($id);
-
-        return Inertia::render('Items/ItemDetail', [
-            'item' => $item,
-        ]);
+        //
     }
 
     /**
