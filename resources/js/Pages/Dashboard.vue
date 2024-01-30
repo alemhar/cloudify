@@ -134,22 +134,24 @@ const appName = import.meta.env.VITE_APP_NAME;
         </div>
 
         <div class="m-6 p-6 bg-green-200 rounded-lg">
-            <div class="flex justify-between">
-                <span>
-                    <h2 class="text-xl font-semibold">
-                        <span class="text-black"> New </span>
-                    </h2>
-                </span>
+            <Link :href="route('deliveries.create')">
+                <div class="flex justify-between">
+                    <span>
+                        <h2 class="text-xl font-semibold">
+                            <span class="text-black"> New </span>
+                        </h2>
+                    </span>
 
-                <span>
-                    <Link :href="route('new')">
-                        <i
-                            class="pi pi-angle-right"
-                            style="font-size: 2rem"
-                        ></i>
-                    </Link>
-                </span>
-            </div>
+                    <span>
+                        
+                            <i
+                                class="pi pi-angle-right"
+                                style="font-size: 2rem"
+                            ></i>
+                        
+                    </span>
+                </div>
+            </Link>
         </div>
         <!-- <div class="py-12"> -->
         <!-- <div class="max-w-7xl mx-auto sm:px-6 lg:px-8"> -->

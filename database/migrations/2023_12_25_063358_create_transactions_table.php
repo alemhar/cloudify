@@ -15,14 +15,16 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->foreignId('company_id')->constrained();
+            $table->foreignId('recipient_id');
             $table->foreignId('user_id')->constrained();
-            $table->string('type'); // ('purchase', 'sale', 'return', 'refund')
-            $table->decimal('total', 8, 2);
-            $table->decimal('tax', 8, 2);
-            $table->decimal('discount', 8, 2);
-            $table->decimal('shipping', 8, 2);
-            $table->decimal('handling', 8, 2);
+            $table->string('type')->nullable(); // ('purchase', 'sale', 'return', 'refund', 'delivery')
+            $table->decimal('total', 8, 2)->nullable();
+            $table->decimal('tax', 8, 2)->nullable();
+            $table->decimal('discount', 8, 2)->nullable();
+            $table->decimal('shipping', 8, 2)->nullable();
+            $table->decimal('handling', 8, 2)->nullable();
             $table->decimal('grand_total', 8, 2);
+            $table->decimal('total_items', 8, 2)->nullable();
             $table->string('status')->nullable(); // ('pending', 'processing', 'shipped', 'delivered', 'returned', 'refunded', 'voided')
             $table->string('details')->nullable();
             $table->string('notes')->nullable();
@@ -30,25 +32,25 @@ return new class extends Migration
             $table->string('payment_reference')->nullable();
             $table->string('payment_status')->nullable(); // ('paid', 'unpaid', 'partial', 'refunded', 'voided')
             $table->string('payment_details')->nullable();
-            $table->string('tracking_number')->nullable();
-            $table->string('tracking_url')->nullable();
-            $table->string('tracking_details')->nullable();
-            $table->string('shipping_method')->nullable();
-            $table->string('shipping_carrier')->nullable();
-            $table->string('shipping_service')->nullable();
-            $table->string('shipping_status')->nullable(); // ('pending', 'processing', 'shipped', 'delivered', 'returned', 'refunded', 'voided')
-            $table->string('shipping_details')->nullable();
-            $table->string('shipping_notes')->nullable();
-            $table->string('shipping_address1')->nullable();
-            $table->string('shipping_address2')->nullable();
-            $table->string('shipping_city')->nullable();
-            $table->string('shipping_postal_code')->nullable();
-            $table->string('shipping_country')->nullable();
-            $table->string('billing_address1')->nullable();
-            $table->string('billing_address2')->nullable();
-            $table->string('billing_city')->nullable();
-            $table->string('billing_postal_code')->nullable();
-            $table->string('billing_country')->nullable();
+            // $table->string('tracking_number')->nullable();
+            // $table->string('tracking_url')->nullable();
+            // $table->string('tracking_details')->nullable();
+            // $table->string('shipping_method')->nullable();
+            // $table->string('shipping_carrier')->nullable();
+            // $table->string('shipping_service')->nullable();
+            // $table->string('shipping_status')->nullable(); // ('pending', 'processing', 'shipped', 'delivered', 'returned', 'refunded', 'voided')
+            // $table->string('shipping_details')->nullable();
+            // $table->string('shipping_notes')->nullable();
+            // $table->string('shipping_address1')->nullable();
+            // $table->string('shipping_address2')->nullable();
+            // $table->string('shipping_city')->nullable();
+            // $table->string('shipping_postal_code')->nullable();
+            // $table->string('shipping_country')->nullable();
+            // $table->string('billing_address1')->nullable();
+            // $table->string('billing_address2')->nullable();
+            // $table->string('billing_city')->nullable();
+            // $table->string('billing_postal_code')->nullable();
+            // $table->string('billing_country')->nullable();
             $table->timestamp('paid_at')->nullable();
             $table->timestamp('shipped_at')->nullable();
             $table->timestamp('delivered_at')->nullable();

@@ -35,7 +35,9 @@ Route::get('/', function () {
 
 Route::get('/dashboard', DashboardController::class)->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/new', [DeliveryController::class, 'create'])->middleware(['auth', 'verified'])->name('new');
+Route::get('/deliveries/create', [DeliveryController::class, 'create'])->middleware(['auth', 'verified'])->name('deliveries.create');
+Route::get('/deliveries', [DeliveryController::class, 'index'])->middleware(['auth', 'verified'])->name('deliveries.index');
+Route::post('/deliveries', [DeliveryController::class, 'store'])->middleware(['auth', 'verified'])->name('deliveries.store');
 
 Route::get('/companies', [CompanyController::class, 'index'])->middleware(['auth', 'verified'])->name('companies');
 Route::post('/companies', [CompanyController::class, 'store'])->middleware(['auth', 'verified'])->name('companies');

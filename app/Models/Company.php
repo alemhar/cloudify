@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Item;
 use App\Models\User;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,21 +13,7 @@ class Company extends Model
 {
     use HasFactory;
 
-    protected $fillable = [ 
-        'name',
-        'account_type',
-        'address1',
-        'address2',
-        'city',
-        'contact_name',
-        'contact_phone',
-        'contact_email',
-        'contact_position',
-        'country',
-        'website',
-        'logo',
-        'subscribe'
-    ];
+    public $guarded = [];
 
     protected static function boot()
     {
@@ -46,6 +34,17 @@ class Company extends Model
         return $this->hasMany(Item::class);
     }
     
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+
+    public function partners()
+    {
+        return $this->belongsToMany(Company::class, 'company_partners', 'company_id', 'partner_id');
+    }
+
     // public function getRouteKeyName()
     // {
     //     return 'uuid';

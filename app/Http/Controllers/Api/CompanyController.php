@@ -12,8 +12,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = \App\Models\Company::all();
-        return response()->json($companies);
+        $partners = auth()->user()->company->partners;
+        return response()->json($partners);
     }
 
     /**
